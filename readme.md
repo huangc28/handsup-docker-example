@@ -36,4 +36,4 @@ REDIS_PORT=6379
 
 ## spin up and run!
 
-prompt `docker-compose up` to spin up the stack. your are ready to go!
+prompt `docker-compose up` to spin up the stack. prompt `http://localhost:8888` in the browser, you should see laravel index page. you are ready to go!

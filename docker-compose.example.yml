@@ -1,0 +1,65 @@
+version: '3'
+services:
+
+  nginx:
+    restart: always
+    container_name: handsupapi_nginx_1
+    build:
+      context: ./docker/nginx
+    ports:
+      - "${APP_PORT}:80"
+      # If you use nginx image to setup SSL, uncomment the following to enable default SSL port .
+      # - "${APP_TSL_PORT}:443"
+    volumes:
+      - .:${PROJECT_PATH}
+    networks:
+      - handsup-net
+    depends_on:
+      - php
+
+  php:
+    restart: always
+    container_name: handsupapi_php_1
+    environment:
+      - container=docker
+    build:
+      context: ./docker/php
+    volumes:
+      - .:${PROJECT_PATH}
+    networks:
+      - handsup-net
+    depends_on:
+      - mysql
+      # - redis
+
+  mysql:
+    image: mysql:5.7.14
+    container_name: mysql
+    restart: always
+    environment:
+      - MYSQL_SERVER=${MYSQL_SERVER}
+      - MYSQL_PORT=${MYSQL_PORT}
+      - MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD}
+    ports:
+      - $MYSQL_PORT:${MYSQL_PORT}
+    volumes:
+      - .:${PROJECT_PATH}
+    networks:
+      - handsup-net
+
+  redis:
+    image: redis:alpine
+    container_name: redis
+    ports:
+      - $REDIS_PORT:${REDIS_PORT}
+    environment:
+      - REDIS_SERVER=${REDIS_SERVER}
+      - REDIS_PORT=${REDIS_PORT}
+    volumes:
+      - .:${PROJECT_PATH}
+    networks:
+      - handsup-net
+
+networks:
+  handsup-net:
+    driver: "bridge"

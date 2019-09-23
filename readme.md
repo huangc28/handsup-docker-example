@@ -16,6 +16,20 @@ git clone `git@github.com:huangc28/handsup-docker-example.git`
 
 Move `docker-compose.example.yml` to your `handsup-api` root project directory.
 
+## SSL certificate
+
+Create a local SSL certificate using [mkcert](https://github.com/FiloSottile/mkcert). you will get two files
+
+  - `{{ YOUR_DOMAIN }}.key.pem`
+  - `{{ YOUR_DOMAIN }}.pem`
+
+Rename `{{ YOUR_DOMAIN }}.key.pem` to `{{ YOUR_DOMAIN }}.key` and place it in `docker/php`.
+Rename `{{ YOUR_DOMAIN }}.pem` to `{{ YOUR_DOMAIN }}.crt` and place it in `docker/php`.
+
+## public / private key
+
+Move your `~/.ssh/id_rsa` and `~/.ssh/id_rsa.pub` to `docker/php`. The reason being that we need ssh key to pull dependencies from handsup private registry.
+
 ## .env.example
 
 Copy and paste the content in `.env.example` file to your `handsup-api` project root `.env` file. The following env variables are needed to spin up `docker-compose` properly.

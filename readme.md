@@ -23,8 +23,8 @@ Create a local SSL certificate using [mkcert](https://github.com/FiloSottile/mkc
   - `{{ YOUR_DOMAIN }}.key.pem`
   - `{{ YOUR_DOMAIN }}.pem`
 
-Rename `{{ YOUR_DOMAIN }}.key.pem` to `{{ YOUR_DOMAIN }}.key` and place it in `docker/php`.
-Rename `{{ YOUR_DOMAIN }}.pem` to `{{ YOUR_DOMAIN }}.crt` and place it in `docker/php`.
+Rename `{{ YOUR_DOMAIN }}.key.pem` to `{{ YOUR_DOMAIN }}.key` and place it in `docker/nginx`.
+Rename `{{ YOUR_DOMAIN }}.pem` to `{{ YOUR_DOMAIN }}.crt` and place it in `docker/nginx`.
 
 ## public / private key
 
@@ -42,12 +42,34 @@ PROJECT_PATH=/var/www
 
 MYSQL_SERVER=127.0.0.1
 MYSQL_PORT=3306
-MYSQL_ROOT_PASSWORD=
+MYSQL_ROOT_PASSWORD={{ YOUR_DB_PASSWORD }}
 
 REDIS_SERVER=127.0.0.1
 REDIS_PORT=6379
 ```
 
+Copy and paste the content in `handsup-api/.env.example` file to your `handsup-api` project root `.env` file. Then modify the following env variables. You can generate App Key by `php artisan key:g`.
+
+```
+APP_KEY={{ YOUR_KEY }}
+
+# DB_HOST=127.0.0.1
+DB_HOST=mysql
+DB_PORT=3306
+DB_PASSWORD={{ YOUR_DB_PASSWORD }}
+
+PERSISTENT_REDIS_HOST=redis
+QUEUE_REDIS_HOST=redis
+CACHE_REDIS_HOST=redis
+```
+
+Try `php artisan optimize:clear` if ENV doesn't update.
+
 ## spin up and run!
 
 prompt `docker-compose up` to spin up the stack. prompt `http://localhost:8888` in the browser, you should see laravel index page. you are ready to go!
+
+## setup Laravel
+
+Move `develper.example.sh` to your `handsup-api` root project directory.
+prompt `./develper.sh composer install` to install the framework's dependencies.

@@ -12,6 +12,28 @@ As I came across setting up local dev environment, installing PHP on macos is re
 
 git clone `git@github.com:huangc28/handsup-docker-example.git`
 
+## Setup environment variables
+
+Paste the following config in your project `.env` spin up docker stack properly:
+
+```
+APP_KEY={{ YOUR_KEY }}
+DB_HOST=mysql
+DB_PORT=3306
+DB_PASSWORD={{ YOUR_DB_PASSWORD }}
+
+PERSISTENT_REDIS_HOST=redis
+QUEUE_REDIS_HOST=redis
+CACHE_REDIS_HOST=redis
+```
+
+Note that you also have to paste [application config](https://github.com/huangc28/handsup-docker-example/wiki/handsup-api-application-environment-variables) in your `.env` file. Missing some of the application configs might cause handsup project fail to start. **GCP project ID** and **facebook relative credentails** are known keys that are needed.
+
+
+Try `php artisan optimize:clear` if ENV doesn't update.
+
+It is mandatory to specify `APP_KEY` for laravel project. Please prompt `php artisan key:g` to generate a new application key.
+
 ## docker-compose.example.yml
 
 Move `docker-compose.example.yml` to your `handsup-api` root project directory.
@@ -29,41 +51,6 @@ Rename `{{ YOUR_DOMAIN }}.pem` to `{{ YOUR_DOMAIN }}.crt` and place it in `docke
 ## public / private key
 
 Move your `~/.ssh/id_rsa` and `~/.ssh/id_rsa.pub` to `docker/php`. The reason being that we need ssh key to pull dependencies from handsup private registry.
-
-## .env.example
-
-Copy and paste the content in `.env.example` file to your `handsup-api` project root `.env` file. The following env variables are needed to spin up `docker-compose` properly.
-
-```
-APP_PORT=8888
-APP_TSL_PORT=443
-SYSTEM_ENV=DOCKER
-PROJECT_PATH=/var/www
-
-MYSQL_SERVER=127.0.0.1
-MYSQL_PORT=3306
-MYSQL_ROOT_PASSWORD={{ YOUR_DB_PASSWORD }}
-
-REDIS_SERVER=127.0.0.1
-REDIS_PORT=6379
-```
-
-Copy and paste the content in `handsup-api/.env.example` file to your `handsup-api` project root `.env` file. Then modify the following env variables. You can generate App Key by `php artisan key:g`.
-
-```
-APP_KEY={{ YOUR_KEY }}
-
-# DB_HOST=127.0.0.1
-DB_HOST=mysql
-DB_PORT=3306
-DB_PASSWORD={{ YOUR_DB_PASSWORD }}
-
-PERSISTENT_REDIS_HOST=redis
-QUEUE_REDIS_HOST=redis
-CACHE_REDIS_HOST=redis
-```
-
-Try `php artisan optimize:clear` if ENV doesn't update.
 
 ## spin up and run!
 

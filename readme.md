@@ -32,7 +32,7 @@ Note that you also have to paste [application config](https://github.com/huangc2
 
 Try `php artisan optimize:clear` if ENV doesn't update.
 
-It is mandatory to specify `APP_KEY` for laravel project. Please prompt `php artisan key:g` to generate a new application key.
+It is mandatory to specify `APP_KEY` for laravel project. Please prompt `php artisan key:g` to generate a new application key and put that in `APP_KEY`.
 
 ## docker-compose.example.yml
 
@@ -40,7 +40,7 @@ Move `docker-compose.example.yml` to your `handsup-api` root project directory.
 
 ## SSL certificate
 
-Create a local SSL certificate using [mkcert](https://github.com/FiloSottile/mkcert). you will get two files
+Generate a local SSL certificate using [mkcert](https://github.com/FiloSottile/mkcert). you will get two files
 
   - `{{ YOUR_DOMAIN }}.key.pem`
   - `{{ YOUR_DOMAIN }}.pem`

@@ -1,4 +1,4 @@
-FROM php:7.2-fpm
+FROM php:7.3-fpm
 
 LABEL maintainer="bryan@handsup.com"
 
@@ -18,6 +18,7 @@ RUN rm /etc/apt/preferences.d/no-debian-php && apt-get update && apt-get install
   libjpeg62-turbo-dev \
   libfreetype6-dev \
   locales \
+  libzip-dev \
   zip \
   jpegoptim optipng pngquant gifsicle \
   vim \

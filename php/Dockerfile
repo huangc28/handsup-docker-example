@@ -9,6 +9,7 @@ WORKDIR /var/www
 ## Clear apt-get cache after installing dependencies
 RUN rm /etc/apt/preferences.d/no-debian-php && apt-get update && apt-get install -y \
   git \
+  php-sqlite3 \
   libmpdec-dev \
   libxml2-dev \
   build-essential \

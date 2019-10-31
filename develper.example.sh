@@ -36,7 +36,9 @@ if [ $# -gt 0 ];then
                 -w /var/www \
                 php ./vendor/bin/phpunit "$@"
     else
-        $COMPOSE "$@"
+        # If user is not calling 'composer' or 'artisan', simply invoke command
+        # the user has intended to.
+        $COMPOSE exec php "$@"
     fi
 
 else

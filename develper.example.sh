@@ -5,6 +5,19 @@ export APP_PORT=${APP_PORT:-8888}
 export COMPOSE_API_VERSION=${COMPOSE_API_VERSION:-1.35}
 
 COMPOSE="docker-compose"
+PROJECT_DOCKER_DIR_LINK="/var/www/docker"
+
+# Check if soft link /var/www has been created in host file system.
+# It is too slow to run tests of handsup-api in docker container since
+# there are too many of them. Thus, we will run them via "make test"
+# in host machine. However, in order to run tests successfully,
+# the host and docker has to use the same filesystem structure
+# so tests in the host can find files properly.
+# for example, path stored in GOOGLE_CLOUD_KEY_FILE in .env.test has to
+# be the same for both docker and host.
+if [ ! -L $PROJECT_DOCKER_DIR_LINK ]; then
+    sudo ln -s "$(pwd)/docker" $PROJECT_DOCKER_DIR_LINK
+fi
 
 if [ $# -gt 0 ];then
     # if composer is used, pass the rest of the arguments to composer command

@@ -16,7 +16,9 @@ PROJECT_DOCKER_DIR_LINK="/var/www/docker"
 # for example, path stored in GOOGLE_CLOUD_KEY_FILE in .env.test has to
 # be the same for both docker and host.
 if [ ! -L $PROJECT_DOCKER_DIR_LINK ]; then
+    echo "soft link to project docker directory not found, creating..."
     sudo ln -s "$(pwd)/docker" $PROJECT_DOCKER_DIR_LINK
+    echo "soft link created in $PROJECT_DOCKER_DIR_LINK"
 fi
 
 if [ $# -gt 0 ];then

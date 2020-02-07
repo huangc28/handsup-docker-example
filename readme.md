@@ -38,7 +38,22 @@ It is mandatory to specify `APP_KEY` for laravel project. Please prompt `php art
 
 Move `docker-compose.example.yml` to your `handsup-api` root project directory.
 
-## SSL certificate
+## [REQUIRED] Move your public / private key to docker/php
+
+Move your `~/.ssh/id_rsa` and `~/.ssh/id_rsa.pub` to `docker/php`. The reason being that we need ssh key to pull dependencies from handsup private registry.
+
+## [OPTIONAL] Handling HTTPS
+
+There are two way to handle https request: 
+- Mount the SSL key pair into docker container. Setup SSL key pair path in `docker/nginx/nginx.conf` 
+
+- Handles SSL traffic before proxying the traffic to docker
+
+If you already have a webserver (like caddy) setup on host to handle https traffic, you can bypass this part as you can simply proxy decrypted traffic to nginx container.
+
+The following demonstrates how to handle SSL traffic in nginx docker container
+
+### Handle HTTPS traffic in nginx container
 
 Generate a local SSL certificate using [mkcert](https://github.com/FiloSottile/mkcert). you will get two files
 
@@ -48,9 +63,41 @@ Generate a local SSL certificate using [mkcert](https://github.com/FiloSottile/m
 Rename `{{ YOUR_DOMAIN }}.key.pem` to `{{ YOUR_DOMAIN }}.key` and place it in `docker/nginx`.
 Rename `{{ YOUR_DOMAIN }}.pem` to `{{ YOUR_DOMAIN }}.crt` and place it in `docker/nginx`.
 
-## public / private key
+**nginx/nginx.conf**
 
-Move your `~/.ssh/id_rsa` and `~/.ssh/id_rsa.pub` to `docker/php`. The reason being that we need ssh key to pull dependencies from handsup private registry.
+```
+server {
+  listen 443 ssl;
+  server_name _;
+  charset utf-8;
+  index index.html index.php;
+  root /var/www/public;
+
+  ssl_certificate /var/www/docker/nginx/handsup.test.crt;
+  ssl_certificate_key /var/www/docker/nginx/handsup.test.key;
+
+  ...
+}
+```
+
+Don't forget to expose `:443` to host to handle SSL traffic from host. This can be setup in `docker-composer.yml` file.
+
+```
+nginx:
+  restart: always
+  container_name: handsupapi_nginx_1
+  build:
+    context: ./docker/nginx
+  ports:
+    - "${APP_PORT}:80"
+    - "444:443" # https traffic from host https://localhost:444 will be proxied to 443 port of the nginx container.
+  volumes:
+    - .:${PROJECT_PATH}
+  networks:
+    - handsup-net
+  depends_on:
+    - php
+```
 
 ## spin up and run!
 
@@ -60,3 +107,5 @@ prompt `docker-compose up` to spin up the stack. prompt `http://localhost:8888` 
 
 Move `develper.example.sh` to your `handsup-api` root project directory.
 prompt `./develper.sh composer install` to install the framework's dependencies.
+
+

@@ -8,7 +8,7 @@ services:
       context: ./docker/nginx
     ports:
       - "${APP_PORT}:80"
-      # If you use nginx image to setup SSL, uncomment the following to enable default SSL port .
+      # If you use nginx container to setup SSL, uncomment the following to enable default SSL port .
       # - "${APP_TSL_PORT}:443"
     volumes:
       - .:${PROJECT_PATH}
